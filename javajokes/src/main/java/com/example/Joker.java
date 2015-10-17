@@ -7,7 +7,7 @@ import java.util.Random;
  * Package: com.example
  * Created by Simone Masini on 17/10/2015 at 12.39.
  */
-public class MyJoker {
+public class Joker {
 
     public String getJoke(){
         Random random = new Random();
