@@ -32,3 +32,19 @@ dependencies {
     compile project(path: ':backend', configuration: 'android-endpoints')
 
 }
+
+sourceSets {
+    unitTest {
+        java.srcDirs = ['tests/src']
+        resources.srcDirs = ['tests/src']
+    }
+}
+
+task unitTest(type:Test, dependsOn: ":backend:startServer") {
+    description = "run unit tests"
+    testClassesDir = sourceSets.unitTest.output.classesDir
+    classpath = files("$System.env.ANDROID_HOME/sources/android-18")
+    getReports().getJunitXml().setOutputPerTestCase(true)
+
+    finalizedBy ":backend:stopServer"
+}

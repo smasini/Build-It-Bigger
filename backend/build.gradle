@@ -40,3 +40,17 @@ appengine {
     }
 }
 
+task startServer << {
+    appengineDownloadSdk.execute()
+    appengineRun.execute()
+    println "server is start..."
+}
+
+task stopServer << {
+   // appengineDownloadSdk.execute()
+    appengineStop.execute()
+    println "...server is stopped"
+}
+
+
+
