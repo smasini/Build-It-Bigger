@@ -11,7 +11,22 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled = true
+
+
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        testHandleProfiling true
+        testFunctionalTest true
     }
+
+    productFlavors {
+        free {
+            applicationId "com.udacity.gradle.builditbigger.free"
+        }
+        paid {
+            applicationId "com.udacity.gradle.builditbigger.paid"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,30 +36,37 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
+
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    //compile project(':javajokes')
     compile project(':androidJokes')
     compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.google.android.gms:play-services:8.1.0'
+    freeCompile 'com.google.android.gms:play-services:8.1.0'
     compile project(path: ':backend', configuration: 'android-endpoints')
-
+    //testCompile  'junit:junit:4.10'
 }
-
+/*
 sourceSets {
-    unitTest {
-        java.srcDirs = ['tests/src']
-        resources.srcDirs = ['tests/src']
+    test {
+         java {
+              srcDirs = ['src/androidTest/java']
+          }
+          resources {
+              srcDirs = ['src/androidTest/java']
+          }
     }
 }
 
 task unitTest(type:Test, dependsOn: ":backend:startServer") {
     description = "run unit tests"
-    testClassesDir = sourceSets.unitTest.output.classesDir
-    classpath = files("$System.env.ANDROID_HOME/sources/android-18")
+    testClassesDir = sourceSets.test.output.classesDir
+    classpath = sourceSets.test.runtimeClasspath//files("$System.env.ANDROID_HOME/sources/android-18")//
     getReports().getJunitXml().setOutputPerTestCase(true)
-
+    afterTest { desc, result ->
+        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
     finalizedBy ":backend:stopServer"
 }
+*/
