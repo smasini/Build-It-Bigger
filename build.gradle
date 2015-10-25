@@ -18,7 +18,7 @@ allprojects {
     }
 }
 
-/*
+
 task runAppEngineAndTest (dependsOn: ":app:unitTest") {
     project(":backend").afterEvaluate { backend ->
         backend.extensions.appengine.daemon = true
@@ -27,4 +27,3 @@ task runAppEngineAndTest (dependsOn: ":app:unitTest") {
 
 runAppEngineAndTest.description = "run GCE Module, run test and then stop it"
 
-*/

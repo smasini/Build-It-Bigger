@@ -36,7 +36,6 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
-
 }
 
 dependencies {
@@ -45,28 +44,55 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     freeCompile 'com.google.android.gms:play-services:8.1.0'
     compile project(path: ':backend', configuration: 'android-endpoints')
-    //testCompile  'junit:junit:4.10'
 }
-/*
+
 sourceSets {
-    test {
-         java {
-              srcDirs = ['src/androidTest/java']
-          }
-          resources {
-              srcDirs = ['src/androidTest/java']
-          }
+    main {
+        java {
+            srcDirs = ["src"]
+            exclude "**/androidTest/**"
+        }
+    }
+    unitTest {
+            java {
+                srcDirs = ["src"]
+                include "**/androidTest/**"
+                include "**/EndpointsAsyncTask.java"
+            }
     }
 }
 
+dependencies {
+    //unitTestCompile files("$project.buildDir/classes/debug")
+    unitTestCompile 'junit:junit:4.11'
+    unitTestCompile 'com.google.android:android-test:4.1.1.4'
+    unitTestCompile project(path: ':backend', configuration: 'android-endpoints')
+
+    unitTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+    unitTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    unitTestCompile ('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+}
+/*
+configurations {
+    unitTestCompile.extendsFrom runtime
+    unitTestRuntime.extendsFrom unitTestCompile
+}*/
+
 task unitTest(type:Test, dependsOn: ":backend:startServer") {
+    finalizedBy ":backend:stopServer"
     description = "run unit tests"
-    testClassesDir = sourceSets.test.output.classesDir
-    classpath = sourceSets.test.runtimeClasspath//files("$System.env.ANDROID_HOME/sources/android-18")//
+    testClassesDir = project.sourceSets.unitTest.output.classesDir
+    classpath = project.sourceSets.unitTest.runtimeClasspath
     getReports().getJunitXml().setOutputPerTestCase(true)
     afterTest { desc, result ->
         println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
     }
-    finalizedBy ":backend:stopServer"
 }
-*/
+
+
+
+

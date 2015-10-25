@@ -1,6 +1,5 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Context;
 import android.test.InstrumentationTestCase;
 
 import java.util.concurrent.CountDownLatch;
@@ -13,18 +12,23 @@ import java.util.concurrent.TimeUnit;
  */
 public class EndpointsAsyncTaskAndroidTestCase extends InstrumentationTestCase {
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+
     public void testVerifyAsyncTaskResponse() throws Throwable {
-        final Context context = getInstrumentation().getTargetContext();
+
         final CountDownLatch signal = new CountDownLatch(1);
 
-        final EndpointsAsyncTask task = new EndpointsAsyncTask(context){
+        final EndpointsAsyncTask task = new EndpointsAsyncTask(null, new EndpointsAsyncTask.Callback() {
             @Override
-            protected void onPostExecute(String result) {
-                assertNotNull(result);
-                assertFalse(result.equals(""));
+            public void onResult(String string) {
+                assertNotNull(string);
+                assertFalse(string.equals(""));
                 signal.countDown();
             }
-        };
+        });
 
         runTestOnUiThread(new Runnable() {
             public void run() {

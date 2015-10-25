@@ -30,6 +30,7 @@ dependencies {
 }
 
 appengine {
+    httpPort = 8080
     downloadSdk = true
     appcfg {
         oauth2 = true
@@ -41,13 +42,12 @@ appengine {
 }
 
 task startServer << {
-    appengineDownloadSdk.execute()
+    //appengineDownloadSdk.execute()
     appengineRun.execute()
     println "server is start..."
 }
 
 task stopServer << {
-   // appengineDownloadSdk.execute()
     appengineStop.execute()
     println "...server is stopped"
 }

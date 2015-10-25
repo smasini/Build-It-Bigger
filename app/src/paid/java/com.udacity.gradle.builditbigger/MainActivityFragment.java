@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
 /**
  * A placeholder fragment containing a simple view.
  */

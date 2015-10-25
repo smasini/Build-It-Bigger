@@ -1,11 +1,9 @@
 package com.udacity.gradle.builditbigger;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.example.androidjokes.JokerActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -21,10 +19,25 @@ import java.io.IOException;
  */
 public class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     private static MyApi myApiService = null;
+    private Callback callback;
     private Context context;
+    private ProgressDialog progress;
 
-    public EndpointsAsyncTask(Context context){
+    public EndpointsAsyncTask(Context context, Callback callback){
         this.context = context;
+        this.callback = callback;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        if(context!=null) {
+            progress = new ProgressDialog(context);
+            progress.setIndeterminate(true);
+            progress.setMessage("Loading joke...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.show();
+        }
     }
 
     @Override
@@ -36,7 +49,7 @@ public class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
                     //.setRootUrl("http://10.0.2.2:8080/_ah/api/")
-                    .setRootUrl("http://192.168.0.2:8181/_ah/api/")
+                    .setRootUrl("http://192.168.0.2:8080/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
                         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
@@ -57,9 +70,13 @@ public class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        Log.d("RESULT", result);
-        Intent intent = new Intent(context, JokerActivity.class);
-        intent.putExtra(context.getString(R.string.extra_joke), result);
-        context.startActivity(intent);
+        if(progress!=null && progress.isShowing())
+            progress.dismiss();
+        if(callback!=null)
+            callback.onResult(result);
+    }
+
+    public interface Callback{
+        void onResult(String string);
     }
 }
