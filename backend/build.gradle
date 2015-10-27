@@ -42,7 +42,7 @@ appengine {
 }
 
 task startServer << {
-    //appengineDownloadSdk.execute()
+    appengineDownloadSdk.execute()
     appengineRun.execute()
     println "server is start..."
 }
